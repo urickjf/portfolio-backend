@@ -5,11 +5,18 @@ const cors = require('cors');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-const DATA_FILE = path.join(__dirname, 'portfolio-data.json');
+
+// --- Caminho para o arquivo de dados ---
+// Utiliza o disco persistente do Render se disponível, senão, usa o diretório local.
+const dataDir = process.env.RENDER_DISK_PATH || __dirname;
+const DATA_FILE = path.join(dataDir, 'portfolio-data.json');
+
+// Garante que o diretório de dados exista
+if (!fs.existsSync(dataDir)){
+    fs.mkdirSync(dataDir, { recursive: true });
+}
 
 // --- Configuração do CORS (Simplificada) ---
-// Habilita o CORS para todas as requisições. 
-// Esta é a forma mais comum e robusta de usar a biblioteca.
 app.use(cors());
 
 // Middleware para entender o corpo das requisições como JSON
